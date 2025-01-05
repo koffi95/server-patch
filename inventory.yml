@@ -1,0 +1,10 @@
+all:
+  hosts:
+    "{{ lookup('env', 'Host') }}":
+      ansible_user: "{{ lookup('env', 'ansible_user') }}"
+      ansible_password: "{{ lookup('env', 'ansible_password') }}"
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_port: 5985
+      ansible_winrm_server_cert_validation: ignore
+
