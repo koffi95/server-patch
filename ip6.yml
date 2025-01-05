@@ -1,8 +1,24 @@
 ---
-- name: Disable IPv6 on Windows Server
+- name: Update Windows Server and Disable IPv6
   hosts: windows
   gather_facts: yes
   tasks:
+
+    - name: Install available updates
+      win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+        reboot: yes
+      register: update_result
+      become: true
+
+    - name: Wait for system to reboot if updates were installed
+      wait_for:
+        path: C:\Windows
+        state: directory
+        timeout: 600
+      when: update_result.reboot_required
 
     - name: Disable IPv6 via registry setting
       win_regedit:
@@ -12,7 +28,7 @@
         type: dword
         state: present
 
-    - name: Restart the server for changes to take effect
+    - name: Restart the server for IPv6 changes to take effect
       win_reboot:
         reboot_timeout: 600
         test_command: hostname
