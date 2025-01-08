@@ -1,6 +1,6 @@
 ---
 - name: Update Windows Server and Disable IPv6
-  hosts: windows
+  hosts: all
   gather_facts: yes
   tasks:
 
